@@ -10,7 +10,7 @@ function App() {
   const [storys, setStory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPages, setCurrentPages] = useState(1);
-  const [storyPerPage, setStoryPerPage] = useState(10);
+  const [storyPerPage] = useState(10);
 
 
 
