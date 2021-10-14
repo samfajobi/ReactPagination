@@ -1,25 +1,49 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useState, useEffect} from 'react';
+import axios from "axios";
+import Posts from './component/Posts/Posts';
+import Pagination from './component/Pagination/Pagination'
+
 
 function App() {
+
+  const [storys, setStory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPages, setCurrentPages] = useState(1);
+  const [storyPerPage, setStoryPerPage] = useState(10);
+
+
+
+  useEffect (() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      const res = await axios.get('https://jsonplaceholder.typicode.com/albums'); //https://jsonplaceholder.typicode.com/comments
+      setStory(res.data);
+      setLoading(false);
+    }
+
+    fetchPosts()
+  }, [])
+
+  console.log(storys)
+
+  const indexOfLastPosts = currentPages * storyPerPage;
+  const indexOfFirstPage = indexOfLastPosts - storyPerPage
+  const currentStory = storys.slice(indexOfFirstPage, indexOfLastPosts )
+
+  
+   const paginate = (pageNumber) => setCurrentPages(pageNumber);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container mt-3">
+
+      <h2 className="text-primary mb-3">A Simple Pagination With React JS</h2>
+      <Posts storys={currentStory} loading={loading} />
+      <Pagination postPerPage={storyPerPage} totalPosts={storys.length} paginate={paginate} />
     </div>
   );
-}
+};
+
+
 
 export default App;
